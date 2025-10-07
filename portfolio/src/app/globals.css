@@ -1,0 +1,278 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===== SCROLL SNAPPING CONFIGURATION ===== */
+html {
+  /* Sử dụng proximity thay vì mandatory để user-friendly hơn */
+  scroll-snap-type: y proximity;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto; /* Thay vì scroll để tránh force scrollbar */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Loại bỏ height: 100% để tránh conflict */
+}
+
+/* Snap sections - với scroll-margin để tránh navbar overlap */
+.snap-section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  scroll-margin-top: 4rem; /* Navbar height */
+  position: relative;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  html {
+    scroll-snap-type: y proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .snap-section {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    scroll-margin-top: 4rem;
+    padding-top: 4rem;
+    box-sizing: border-box;
+  }
+  
+  /* Better text rendering on mobile */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* iOS Safari specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    html {
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .snap-section {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
+  }
+}
+
+/* Beige & White Themed Backgrounds */
+/* Light effect backgrounds */
+.light-effect-1 {
+  background: linear-gradient(135deg, #f5f5dc, #faf0e6, #fff8dc);
+}
+
+.light-effect-2 {
+  background: linear-gradient(135deg, #faf0e6, #f5f5dc, #fff);
+}
+
+.light-effect-3 {
+  background: linear-gradient(135deg, #fff8dc, #faf0e6, #f5f5dc);
+}
+
+.light-effect-4 {
+  background: linear-gradient(135deg, #fff, #fff8dc, #faf0e6);
+}
+
+/* Skills carousel animation - ping-pong effect */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(calc(-100% / 3));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 10s ease-in-out infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Subtle shadow pattern để tạo chiều sâu */
+.subtle-shadows::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(0, 0, 0, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.015) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Container cho nội dung để đảm bảo text luôn hiển thị trên background */
+.content-overlay {
+  position: relative;
+  z-index: 2;
+}
+
+/* Navbar đồng nhất cho tất cả sections - background đặc */
+.navbar-home {
+  background: linear-gradient(
+    135deg,
+    #F5EBDD 0%,      /* Solid background */
+    #FAF0E6 20%,     /* Solid background */
+    #FFF8DC 40%,     /* Solid background */  
+    #F0E6D7 60%,     /* Solid background */
+    #F5EBDD 80%,     /* Solid background */
+    #F5EBDD 100%     /* Solid background */
+  );
+  border-bottom: 1px solid rgba(139, 69, 19, 0.15);
+  box-shadow: 0 2px 20px rgba(139, 69, 19, 0.08);
+  transition: all 0.3s ease-in-out;
+  /* Navbar should not participate in snapping */
+  position: fixed;
+  z-index: 50;
+  scroll-snap-align: none;
+}
+
+
+
+/* Text styling cho navbar */
+.navbar-logo {
+  color: #8B4513 !important; /* Saddle Brown */
+  transition: all 0.3s ease-in-out;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.navbar-logo:hover {
+  color: #654321 !important; /* Dark Brown */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Nav items styling */
+.navbar-link {
+  color: #654321 !important; /* Dark Brown */
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  text-shadow: 0.5px 0.5px 1px rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: transparent;
+}
+
+/* Underline effect với gradient đen */
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    rgb(0, 0, 0) 0%,          /* Pure Black */
+    rgb(40, 40, 40) 25%,      /* Dark Gray */
+    rgb(0, 0, 0) 50%,         /* Pure Black */
+    rgb(60, 60, 60) 75%,      /* Medium Gray */
+    rgb(20, 20, 20) 100%      /* Very Dark Gray */
+  );
+  transform: translateX(-50%);
+  transition: width 0.3s ease-in-out;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover effect - underline mở rộng với gradient đen */
+.navbar-link:hover::after {
+  width: 100%;
+}
+
+.navbar-link:hover {
+  color: #2D1810 !important; /* Darker brown on hover */
+  transform: translateY(-1px);
+}
+
+/* Active nav item - underline luôn hiển thị với gradient đen đậm hơn */
+.navbar-link.active::after {
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    rgb(0, 0, 0) 0%,          /* Pure Black */
+    rgb(20, 20, 20) 25%,      /* Very Dark Gray */
+    rgb(0, 0, 0) 50%,         /* Pure Black */
+    rgb(40, 40, 40) 75%,      /* Dark Gray */
+    rgb(10, 10, 10) 100%      /* Almost Black */
+  );
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-link.active {
+  color: #2D1810 !important; /* Darker brown for active */
+  font-weight: 600;
+}
+
+/* ===== SNAP SCROLLING - SIMPLE & WORKING ===== */
+
+/* Timeline Animation */
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+.timeline-item {
+  opacity: 0;
+  animation: slideInFromLeft 0.8s ease-out forwards;
+}
+
+.animate-timeline {
+  animation-play-state: running;
+}
+
+/* Mobile support */
+@media (max-width: 768px) {
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Mobile Timeline Adjustments */
+  .timeline-item {
+    margin-bottom: 2rem;
+  }
+}
