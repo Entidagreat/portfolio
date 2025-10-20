@@ -51,7 +51,6 @@ export const HeroSection: FC = () => {
                   </p>
                 </div>
 
-
                     {/* Social Media Icons */}
                     <div className="border-t border-gray-200/50 pt-4 sm:pt-6 pb-2">
                       <h4 className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3 sm:mb-4">
@@ -73,7 +72,7 @@ export const HeroSection: FC = () => {
               <div className="relative w-72 h-96 sm:w-80 sm:h-[26rem] md:w-[22rem] md:h-[30rem] lg:w-80 lg:h-[26rem] xl:w-[22rem] xl:h-[30rem]">
                 
                 {/* Background Decorations */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-lg transform rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-gray-500/20 to-zinc-500/20 rounded-2xl blur-lg transform rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
                 <div className="absolute -inset-2 bg-white/30 rounded-2xl transform -rotate-3 group-hover:-rotate-6 transition-transform duration-500"></div>
                 
                 {/* Main Image */}

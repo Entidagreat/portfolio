@@ -120,7 +120,6 @@ export const AboutSection: FC = () => {
               isActive={activeTab === 'education'} 
             />
           ) : activeTab === 'branding' ? (
-            /* Simple Layout for Branding Tab - Only Logo and Textbox */
             <div className="max-w-5xl mx-auto px-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center justify-items-center">
                 {/* Logo Section */}
