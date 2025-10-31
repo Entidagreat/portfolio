@@ -10,7 +10,6 @@ interface Contact {
   subject: string;
   message: string;
   created_at: string;
-  is_read: boolean;
 }
 
 interface AdminPanelProps {
@@ -133,13 +132,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   <div className="text-sm font-medium text-gray-700">
                     {t('admin.labels.sentAt')} {formatDate(selectedContact.created_at)}
                   </div>
-                  <div className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    selectedContact.is_read 
-                      ? 'bg-green-200 text-green-900' 
-                      : 'bg-yellow-200 text-yellow-900'
-                  }`}>
-                    {selectedContact.is_read ? t('admin.status.read') : t('admin.status.unread')}
-                  </div>
                 </div>
               </div>
             </div>
@@ -187,11 +179,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                           <div className="flex items-center space-x-2 mb-2">
                             <h4 className="font-semibold text-gray-900">{contact.name}</h4>
                             <span className="text-sm text-gray-700 font-medium">({contact.email})</span>
-                            {!contact.is_read && (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-red-200 text-red-900">
-                                Mới
-                              </span>
-                            )}
                           </div>
                           <p className="text-sm font-semibold text-gray-800 mb-1">{contact.subject}</p>
                           <p className="text-sm text-gray-700 line-clamp-2">{contact.message}</p>

@@ -24,22 +24,23 @@ body {
 
 /* ===== SCROLL SNAPPING CONFIGURATION ===== */
 html {
-  /* Sử dụng proximity thay vì mandatory để user-friendly hơn */
   scroll-snap-type: y proximity;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: auto; /* Thay vì scroll để tránh force scrollbar */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling cho mobile */
 }
 
 * {
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  /* Loại bỏ height: 100% để tránh conflict */
 }
 
 /* Snap sections - với scroll-margin để tránh navbar overlap */
@@ -50,38 +51,21 @@ body {
   position: relative;
 }
 
-/* Mobile optimizations */
-@media (max-width: 768px) {
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
   html {
-    scroll-snap-type: y proximity;
-    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: y mandatory; /* iOS cần mandatory để snap mượt hơn */
   }
   
   .snap-section {
-    min-height: 100vh;
-    scroll-snap-align: start;
-    scroll-margin-top: 4rem;
+    min-height: -webkit-fill-available; /* Fix iOS viewport height */
+  }
+}
+
+/* Mobile padding adjustment */
+@media (max-width: 768px) {
+  .snap-section {
     padding-top: 4rem;
-    box-sizing: border-box;
-  }
-  
-  /* Better text rendering on mobile */
-  * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* iOS Safari specific fixes */
-  @supports (-webkit-touch-callout: none) {
-    html {
-      scroll-snap-type: y mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    .snap-section {
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-    }
   }
 }
 
@@ -103,7 +87,7 @@ body {
   background: linear-gradient(135deg, #fff, #fff8dc, #faf0e6);
 }
 
-/* Skills carousel animation - ping-pong effect */
+/* Skills carousel animation */
 @keyframes scroll {
   0% {
     transform: translateX(0);
@@ -261,10 +245,6 @@ body {
   animation: slideInFromLeft 0.8s ease-out forwards;
 }
 
-.animate-timeline {
-  animation-play-state: running;
-}
-
 /* Mobile support */
 @media (max-width: 768px) {
   html {
@@ -274,5 +254,80 @@ body {
   /* Mobile Timeline Adjustments */
   .timeline-item {
     margin-bottom: 2rem;
+  }
+}
+
+/* ===== HERO SECTION ANIMATIONS ===== */
+
+/* Fade In Up Animation - cho Information Box */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade In Right Animation - cho Image */
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale In Animation - alternative cho image */
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== ABOUT SECTION ANIMATIONS ===== */
+
+/* Flip In Animation - cho Skills cards */
+@keyframes flipIn {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateY(-90deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: perspective(800px) rotateY(-45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0deg);
+  }
+}
+
+/* Zoom Bounce Animation - cho Achievements cards */
+@keyframes zoomBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

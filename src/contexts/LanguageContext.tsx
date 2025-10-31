@@ -16,18 +16,24 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  const [language, setLanguage] = useState<'en' | 'vi'>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('language') as 'en' | 'vi') || 'en';
+  // Luôn bắt đầu với EN
+  const [language, setLanguage] = useState<'en' | 'vi'>('en');
+  const [mounted, setMounted] = useState(false);
+
+  // Chỉ đọc từ localStorage sau khi component mount
+  useEffect(() => {
+    setMounted(true);
+    const savedLanguage = localStorage.getItem('language') as 'en' | 'vi';
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
     }
-    return 'en';
-  });
+  }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (mounted) {
       localStorage.setItem('language', language);
     }
-  }, [language]);
+  }, [language, mounted]);
 
   // Translation function
   const t = (key: string): string => {

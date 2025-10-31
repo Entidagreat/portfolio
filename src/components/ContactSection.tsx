@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Project {
@@ -27,7 +27,34 @@ export const ContactSection: FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const { language, setLanguage, t } = useLanguage();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   const projects: Project[] = [
     {
@@ -120,27 +147,30 @@ export const ContactSection: FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       className="snap-section min-h-screen flex items-start justify-center light-effect-4 subtle-shadows relative overflow-hidden pt-20 sm:pt-16 pb-16"
     >
       <div className="content-overlay max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             {t("contact.title")}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left Side - Projects List */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className={`space-y-4 sm:space-y-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}
+               style={{ transitionDelay: isVisible ? '0.2s' : '0s' }}>
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               {t("contact.projectsTitle")}
             </h3>
             <div className="space-y-3 sm:space-y-4">
-              {projects.map((project) => (
+              {projects.map((project, index) => (
                 <div
                   key={project.id}
-                  className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white/50 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 group"
+                  className={`flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white/50 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 group ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  style={{ transitionDelay: isVisible ? `${0.4 + index * 0.15}s` : '0s' }}
                   onClick={() => handleProjectClick(project.githubUrl)}
                 >
                   {/* Project Image */}
@@ -173,7 +203,8 @@ export const ContactSection: FC = () => {
           </div>
 
           {/* Right Side - Contact Form */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className={`space-y-4 sm:space-y-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
+               style={{ transitionDelay: isVisible ? '0.3s' : '0s' }}>
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               {t("contact.contactTitle")}
             </h3>

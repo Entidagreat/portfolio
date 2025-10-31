@@ -1,15 +1,43 @@
 "use client";
 
-import { FC } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { SocialMediaIcons } from './SocialMediaIcons';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export const HeroSection: FC = () => {
   const { language, setLanguage, t } = useLanguage();
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      { threshold: 0.2 } // Trigger khi 20% section visible
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       id="home"
       className="snap-section h-screen flex items-center justify-center light-effect-1 subtle-shadows relative overflow-hidden pt-20 sm:pt-16"
     >
@@ -20,7 +48,7 @@ export const HeroSection: FC = () => {
           <div className="flex flex-col justify-start lg:justify-center space-y-6 sm:space-y-8 order-2 lg:order-1">
             
             {/* Name and Title - Separate Row */}
-            <div className="space-y-4">
+            <div className={`space-y-4 transition-all duration-800 ${isVisible ? 'animate-[fadeInUp_0.8s_ease-out]' : 'opacity-0'}`}>
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight whitespace-nowrap">
                 PHAN NGỌC THẠCH
               </h1>
@@ -30,7 +58,7 @@ export const HeroSection: FC = () => {
             </div>
 
             {/* Information Box */}
-            <div className="bg-white/40 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-white/30 shadow-lg max-h-none sm:max-h-[70vh] overflow-visible sm:overflow-y-auto">
+            <div className={`bg-white/40 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-white/30 shadow-lg max-h-none sm:max-h-[70vh] overflow-visible sm:overflow-y-auto transition-all duration-1000 ${isVisible ? 'animate-[fadeInUp_1s_ease-out_0.2s] opacity-100 [animation-fill-mode:forwards]' : 'opacity-0'}`}>
               <div className="space-y-4 sm:space-y-6">
                 
                 {/* Description */}
@@ -65,7 +93,7 @@ export const HeroSection: FC = () => {
               </div>
 
           {/* Right Side - Profile Image */}
-          <div className="flex justify-center lg:justify-end order-1 lg:order-2">
+          <div className={`flex justify-center lg:justify-end order-1 lg:order-2 transition-all duration-1000 ${isVisible ? 'animate-[fadeInRight_1s_ease-out_0.4s] opacity-100 [animation-fill-mode:forwards]' : 'opacity-0'}`}>
             <div className="relative group">
               
               {/* Image Container */}

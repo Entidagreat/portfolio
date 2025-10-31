@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Comment {
@@ -18,8 +18,36 @@ const CommentsSection = () => {
   const [authorName, setAuthorName] = useState("");
   const [showAuthorInput, setShowAuthorInput] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const commentsPerPage = 5;
   const { language, setLanguage, t } = useLanguage();
+
+  // Intersection Observer for animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   // Calculate pagination
   const totalPages = Math.ceil(comments.length / commentsPerPage);
@@ -120,15 +148,20 @@ const CommentsSection = () => {
   };
 
   return (
-    <section id="comments" className="snap-section min-h-screen py-16 sm:py-20 px-4 sm:px-6 light-effect-4 subtle-shadows relative overflow-hidden">
+    <section 
+      ref={sectionRef}
+      id="comments" 
+      className="snap-section min-h-screen py-16 sm:py-20 px-4 sm:px-6 light-effect-4 subtle-shadows relative overflow-hidden"
+    >
       <div className="max-w-4xl mx-auto content-overlay">
         {/* Header */}
-        <div className="bg-white/70 backdrop-blur-sm rounded-t-lg px-4 sm:px-6 py-3 sm:py-4 border border-white/30">
+        <div className={`bg-white/70 backdrop-blur-sm rounded-t-lg px-4 sm:px-6 py-3 sm:py-4 border border-white/30 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
           <h2 className="text-gray-800 font-semibold text-base sm:text-lg">{t("comments.title")}</h2>
         </div>
 
         {/* Comments Container */}
-        <div className="bg-white/50 backdrop-blur-sm border-x border-white/30 min-h-[350px] sm:min-h-[400px]">
+        <div className={`bg-white/50 backdrop-blur-sm border-x border-white/30 min-h-[350px] sm:min-h-[400px] transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+             style={{ transitionDelay: isVisible ? '0.2s' : '0s' }}>
           {/* Add Comment Section */}
           <div className="p-4 sm:p-6 border-b border-white/30">
             <div className="flex items-start space-x-2 sm:space-x-3">
@@ -210,8 +243,12 @@ const CommentsSection = () => {
                 <p className="text-sm mt-2">Be the first to share your thoughts!</p>
               </div>
             ) : (
-              currentComments.map((comment) => (
-                <div key={comment.id} className="flex items-start space-x-3 group">
+              currentComments.map((comment, index) => (
+                <div 
+                  key={comment.id} 
+                  className={`flex items-start space-x-3 group transition-all duration-500 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  style={{ transitionDelay: isVisible ? `${0.4 + index * 0.1}s` : '0s' }}
+                >
                   {/* Avatar */}
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                     <img 
@@ -285,7 +322,8 @@ const CommentsSection = () => {
         </div>
 
         {/* Footer */}
-        <div className="bg-white/70 backdrop-blur-sm rounded-b-lg px-6 py-3 border border-white/30 border-t-0">
+        <div className={`bg-white/70 backdrop-blur-sm rounded-b-lg px-6 py-3 border border-white/30 border-t-0 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+             style={{ transitionDelay: isVisible ? '0.3s' : '0s' }}>
           <div className="flex items-center justify-center">
           </div>
         </div>

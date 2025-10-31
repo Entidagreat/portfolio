@@ -29,7 +29,7 @@ const Navbar = () => {
       const sections = navItems.map(item => item.href.replace('#', ''));
       const navbarHeight = 64;
       
-      // Tìm section nào đang được xem nhiều nhất
+      // section hiện tại mặc định
       let currentSection = 'home';
       
       for (const sectionId of sections) {
@@ -117,7 +117,7 @@ const Navbar = () => {
       setIsAdminOpen(true);
       setLogoClickCount(0);
     } else {
-      // Single click - normal navigation
+      // Single click -> normal navigation
       smoothScrollTo("#home");
     }
   };

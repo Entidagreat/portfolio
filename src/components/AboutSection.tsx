@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import { Timeline } from './Timeline';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -17,8 +17,34 @@ interface TabContent {
 
 export const AboutSection: FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('skills');
-  const [brandingText, setBrandingText] = useState<string>('');
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const { language, setLanguage, t } = useLanguage();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      { threshold: 0.2 } // Trigger khi 20% 
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
 
   const tabContents: Record<TabType, TabContent> = {
@@ -70,19 +96,24 @@ export const AboutSection: FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="about"
       className="snap-section h-screen flex items-center justify-center light-effect-2 subtle-shadows relative overflow-hidden"
     >
       <div className="content-overlay text-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
+        <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           {t("about.title")}
         </h2>
-        <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto mb-6 sm:mb-8">
-          {t("about.h1")}
-        </p>
+        
+        {/* Chỉ hiển thị mô tả khi tab là 'skills' */}
+        {activeTab === 'skills' && (
+          <p className={`text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto mb-6 sm:mb-8 transition-all duration-500 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {t("about.h1")}
+          </p>
+        )}
 
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-6 sm:mb-8 overflow-x-auto">
+        <div className={`flex justify-center mb-6 sm:mb-8 overflow-x-auto transition-all duration-500 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="bg-white/40 backdrop-blur-sm rounded-full p-1 sm:p-2 border border-white/30 flex-shrink-0">
             {tabs.map((tab) => (
               <button
@@ -105,10 +136,10 @@ export const AboutSection: FC = () => {
 
         {/* Tab Content */}
         <div className="transition-all duration-500 ease-in-out">
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-3 sm:mb-4">
+          <h3 className={`text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-3 sm:mb-4 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             {currentContent.title}
           </h3>
-          <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-4">
+          <p className={`text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-4 transition-opacity duration-500 delay-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             {currentContent.description}
           </p>
 
@@ -123,7 +154,8 @@ export const AboutSection: FC = () => {
             <div className="max-w-5xl mx-auto px-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center justify-items-center">
                 {/* Logo Section */}
-                <div className="flex justify-center items-center w-full h-full order-1 lg:order-1">
+                <div className={`flex justify-center items-center w-full h-full order-1 lg:order-1 transition-all duration-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+                     style={{ transitionDelay: isVisible ? '0.3s' : '0s' }}>
                   <img 
                     src="/images/logo.png" 
                     alt="Personal Brand Logo" 
@@ -135,17 +167,17 @@ export const AboutSection: FC = () => {
                 </div>
                 
                 {/* Textbox Section */}
-                <div className="flex items-center justify-center w-full h-full order-2 lg:order-2">
-                  <div className="w-full max-w-md p-4 sm:p-6 bg-white/30 backdrop-blur-sm rounded-xl border border-white/20">
-                    <h4 className="font-semibold text-gray-800 mb-3 sm:mb-4 text-lg sm:text-xl text-center">
+                <div className={`flex items-center justify-center w-full h-full order-2 lg:order-2 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
+                     style={{ transitionDelay: isVisible ? '0.6s' : '0s' }}>
+                  <div className="w-full max-w-md p-4 sm:p-6 bg-white/30 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/40 hover:shadow-xl hover:scale-105 transition-all duration-500">
+                    <h4 className="font-semibold text-gray-800 mb-3 sm:mb-4 text-lg sm:text-xl text-center transition-colors duration-300 hover:text-blue-600">
                       {t("about.brandstory")}
                     </h4>
-                    <textarea
-                      value={brandingText}
-                      className="w-full h-40 sm:h-48 md:h-56 p-3 sm:p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-white/30 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-500 text-sm sm:text-base leading-relaxed"
-                      placeholder={t("about.brandstoryDesc")}
-                      onChange={(e) => setBrandingText(e.target.value)}
-                    />
+                    <div className="w-full h-40 sm:h-48 md:h-56 p-3 sm:p-4 bg-white/30 backdrop-blur-sm rounded-lg border border-white/30 text-gray-700 text-sm sm:text-base leading-relaxed overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:bg-white/60 transition-all duration-300">
+                      <p className="text-justify whitespace-pre-line">
+                        {t("about.brandstoryDesc")}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -153,19 +185,29 @@ export const AboutSection: FC = () => {
           ) : (
             /* Regular Grid for other tabs */
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto px-4">
-              {currentContent.items.map((item, index) => (
-                <div 
-                  key={index}
-                  className="p-4 sm:p-6 bg-white/30 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/40 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-                >
-                  <h4 className="font-semibold text-gray-800 mb-2 sm:mb-3 text-base sm:text-lg">
-                    {item.title}
-                  </h4>
-                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
-                    {item.subtitle}
-                  </p>
-                </div>
-              ))}
+              {currentContent.items.map((item, index) => {
+                // Chọn animation dựa theo tab
+                const animationClass = activeTab === 'skills' 
+                  ? 'animate-[flipIn_1.2s_ease-out]' 
+                  : activeTab === 'achievements' 
+                  ? 'animate-[zoomBounce_1s_ease-out]'
+                  : 'animate-[fadeInUp_1.2s_ease-out]';
+                
+                return (
+                  <div 
+                    key={index}
+                    className={`p-4 sm:p-6 bg-white/30 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/40 transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${isVisible ? `${animationClass} opacity-100 [animation-fill-mode:forwards]` : 'opacity-0'}`}
+                    style={{ animationDelay: isVisible ? `${0.5 + index * 0.2}s` : '0s' }}
+                  >
+                    <h4 className="font-semibold text-gray-800 mb-2 sm:mb-3 text-base sm:text-lg">
+                      {item.title}
+                    </h4>
+                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                      {item.subtitle}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

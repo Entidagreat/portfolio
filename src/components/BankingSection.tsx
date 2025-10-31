@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface BankingService {
@@ -14,7 +14,34 @@ interface BankingService {
 
 export const BankingSection: FC = () => {
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const { language, setLanguage, t } = useLanguage();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   const bankingServices: BankingService[] = [
     {
@@ -114,26 +141,28 @@ export const BankingSection: FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="banking"
       className="snap-section min-h-screen flex items-center justify-center light-effect-1 subtle-shadows relative overflow-hidden pt-20 sm:pt-16"
     >
       <div className="content-overlay max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             {t("banking.title")}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
-          {bankingServices.map((service) => (
+          {bankingServices.map((service, index) => (
             <div
               key={service.id}
-              className="relative bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden group"
+              className={`relative bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 overflow-hidden group ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
               style={{
                 backgroundImage: `linear-gradient(rgba(63, 61, 61, 0.3), rgba(235, 230, 230, 0.3)), url(${service.backgroundImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                minHeight: '200px'
+                minHeight: '200px',
+                transitionDelay: isVisible ? `${0.2 + index * 0.15}s` : '0s'
               }}
             >
               {/* Background overlay for better text readability */}

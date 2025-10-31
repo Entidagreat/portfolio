@@ -15,8 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PHAN NGOC THACH",
+  title: "PHAN NGOC THACH - Portfolio",
   description: "Portfolio của Phan Ngọc Thạch - Web Developer",
+  icons: {
+    icon: '/images/logotab.png',
+    apple: '/images/logotab.png',
+  },
 };
 
 export default function RootLayout({

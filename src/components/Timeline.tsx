@@ -124,7 +124,7 @@ export const Timeline: FC<TimelineProps> = ({
         </div>
       </div>
 
-      {/* Mobile Version - Grid Cards (like Achievements) */}
+      {/* Mobile Version  */}
       <div className="block md:hidden lg:hidden xl:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 px-4">
         {items.map((item, index) => {
           const isNodeVisible = visibleNodes.includes(index);
