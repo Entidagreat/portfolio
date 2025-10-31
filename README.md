@@ -162,7 +162,7 @@ This project is open source and available under the [MIT License](LICENSE).
 **Phan Ngọc Thạch**
 
 - GitHub: [@Entidagreat](https://github.com/Entidagreat)
-- Portfolio: [Your Live URL]
+- Portfolio: [[thachpn](https://portfolio-thachpn.vercel.app/)]
 
 ## 🙏 Acknowledgments
 
