@@ -29,9 +29,9 @@ export async function GET() {
     }
 
     // Format timestamps for frontend
-    const formattedComments = comments?.map((comment: any) => ({
+    const formattedComments = comments?.map((comment: Record<string, unknown>) => ({
       ...comment,
-      timestamp: new Date(comment.created_at).toLocaleDateString('en-GB', {
+      timestamp: new Date(comment.created_at as string).toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',

@@ -38,13 +38,15 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
   // Translation function
   const t = (key: string): string => {
     const keys = key.split('.');
-    let value: any = translations[language];
+    let value: Record<string, unknown> | string = translations[language];
     
     for (const k of keys) {
-      value = value?.[k];
+      if (typeof value === 'object' && value !== null) {
+        value = value[k] as Record<string, unknown> | string;
+      }
     }
     
-    return value || key;
+    return typeof value === 'string' ? value : key;
   };
 
   return (

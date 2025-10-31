@@ -114,7 +114,7 @@ const CommentsSection = () => {
       const result = await response.json();
       
       if (result.success) {
-        const formattedComments = result.data.map((comment: any) => ({
+        const formattedComments = result.data.map((comment: Record<string, unknown>) => ({
           id: comment.id,
           author: comment.author,
           content: comment.content,
